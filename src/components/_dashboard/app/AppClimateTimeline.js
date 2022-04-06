@@ -1,4 +1,3 @@
-import faker from 'faker';
 import PropTypes from 'prop-types';
 // material
 import { Card, Typography, CardHeader, CardContent } from '@mui/material';
@@ -10,36 +9,34 @@ import {
   TimelineSeparator,
   TimelineDot
 } from '@mui/lab';
-// utils
-import { fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TIMELINES = [
   {
-    title: '1983, orders, $4220',
-    time: faker.date.past(),
+    title: 'Record-Breaking Snowfall - Madrid',
+    time: '01-01-2021',
     type: 'order1'
   },
   {
-    title: '12 Invoices have been paid',
-    time: faker.date.past(),
-    type: 'order2'
+    title: 'Storm Christoph - UK',
+    time: '18-01-2021',
+    type: 'order1'
   },
   {
-    title: 'Order #37745 from September',
-    time: faker.date.past(),
-    type: 'order3'
+    title: 'Cyclone Ana - Fiji',
+    time: '01-31-2021',
+    type: 'order1'
   },
   {
-    title: 'New order placed #XF-2356',
-    time: faker.date.past(),
-    type: 'order4'
+    title: 'Winter Storms - Texas',
+    time: '02-01-2021',
+    type: 'order1'
   },
   {
-    title: 'New order placed #XF-2346',
-    time: faker.date.past(),
-    type: 'order5'
+    title: 'NSW Flooding - Australia',
+    time: '03-01-2021',
+    type: 'order1'
   }
 ];
 
@@ -70,14 +67,14 @@ function OrderItem({ item, isLast }) {
       <TimelineContent>
         <Typography variant="subtitle2">{title}</Typography>
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-          {fDateTime(time)}
+          {time}
         </Typography>
       </TimelineContent>
     </TimelineItem>
   );
 }
 
-export default function AppOrderTimeline() {
+export default function AppClimateTimeline() {
   return (
     <Card
       sx={{
@@ -86,7 +83,7 @@ export default function AppOrderTimeline() {
         }
       }}
     >
-      <CardHeader title="Order Timeline" />
+      <CardHeader title="Recent Extreme Climate Events" />
       <CardContent>
         <Timeline>
           {TIMELINES.map((item, index) => (

@@ -3,20 +3,20 @@ import ReactApexChart from 'react-apexcharts';
 // material
 import { useTheme, styled } from '@mui/material/styles';
 import { Card, CardHeader } from '@mui/material';
+// utils
+import { fNumber } from '../../../utils/formatNumber';
 //
 import { BaseOptionChart } from '../../charts';
 
 // ----------------------------------------------------------------------
 
-const CHART_HEIGHT = 392;
+const CHART_HEIGHT = 372;
 const LEGEND_HEIGHT = 72;
 
 const ChartWrapperStyle = styled('div')(({ theme }) => ({
   height: CHART_HEIGHT,
-  marginTop: theme.spacing(2),
-  '& .apexcharts-canvas svg': {
-    height: CHART_HEIGHT
-  },
+  marginTop: theme.spacing(5),
+  '& .apexcharts-canvas svg': { height: CHART_HEIGHT },
   '& .apexcharts-canvas svg,.apexcharts-canvas foreignObject': {
     overflow: 'visible'
   },
@@ -31,41 +31,41 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [
-  { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-  { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-  { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] }
-];
+const CHART_DATA = [1, 20.32, 1.33, 6.764, 4.95];
 
-export default function AppCurrentSubject() {
+export default function AppEmissionsByRegion() {
   const theme = useTheme();
 
   const chartOptions = merge(BaseOptionChart(), {
-    stroke: { width: 2 },
-    fill: { opacity: 0.48 },
+    colors: [
+      theme.palette.primary.main,
+      theme.palette.info.main,
+      theme.palette.warning.main,
+      theme.palette.error.main
+    ],
+    labels: ['Oceania', 'Asia', 'Africa', 'Americas', 'Europe'],
+    stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
-    xaxis: {
-      categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
-      labels: {
-        style: {
-          colors: [
-            theme.palette.text.secondary,
-            theme.palette.text.secondary,
-            theme.palette.text.secondary,
-            theme.palette.text.secondary,
-            theme.palette.text.secondary,
-            theme.palette.text.secondary
-          ]
+    dataLabels: { enabled: true, dropShadow: { enabled: false } },
+    tooltip: {
+      fillSeriesColor: false,
+      y: {
+        formatter: (seriesName) => fNumber(seriesName),
+        title: {
+          formatter: (seriesName) => `#${seriesName}`
         }
       }
+    },
+    plotOptions: {
+      pie: { donut: { labels: { show: false } } }
     }
   });
 
   return (
     <Card>
-      <CardHeader title="Current Subject" />
+      <CardHeader title="CO2 Emissions by Region" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="radar" series={CHART_DATA} options={chartOptions} height={340} />
+        <ReactApexChart type="pie" series={CHART_DATA} options={chartOptions} height={280} />
       </ChartWrapperStyle>
     </Card>
   );

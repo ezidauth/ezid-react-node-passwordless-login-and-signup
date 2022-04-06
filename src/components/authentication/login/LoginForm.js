@@ -1,54 +1,68 @@
 import * as Yup from 'yup';
+import { useFormik } from 'formik';
+import axios from 'axios';
 import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useFormik, Form, FormikProvider } from 'formik';
-import { Icon } from '@iconify/react';
-import eyeFill from '@iconify/icons-eva/eye-fill';
-import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
+
 // material
-import {
-  Link,
-  Stack,
-  Checkbox,
-  TextField,
-  IconButton,
-  InputAdornment,
-  FormControlLabel
-} from '@mui/material';
+import { Stack, TextField, Typography, Zoom, Box } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+const baseURL = 'http://localhost:5001';
+
+const LoginForm = () => {
+  const [checkEmailText, setCheckEmailText] = useState(false);
+
+  const displayEmailTextHandler = () => {
+    setCheckEmailText(!checkEmailText);
+  };
+
+  const resetHandler = () => {
+    setCheckEmailText(!checkEmailText);
+  };
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    email: Yup.string().email('Email must be a valid email address').required('Email is required')
   });
 
   const formik = useFormik({
     initialValues: {
       email: '',
-      password: '',
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: (values) => {
+      displayEmailTextHandler();
+      submitForm(values);
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, isSubmitting, setSubmitting, handleSubmit, getFieldProps } = formik;
 
-  const handleShowPassword = () => {
-    setShowPassword((show) => !show);
+  const submitForm = (values) => {
+    axios
+      .post(`${baseURL}/login`, {
+        headers: {
+          key: 'Content-Type',
+          accepts: 'application/json'
+        },
+        data: {
+          email: `${values.email}`
+        }
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setSubmitting(false);
   };
 
-  return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+  const form = (
+    <Zoom in={!checkEmailText}>
+      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField
             fullWidth
@@ -59,36 +73,6 @@ export default function LoginForm() {
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
           />
-
-          <TextField
-            fullWidth
-            autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
-            label="Password"
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
-          />
-        </Stack>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-          <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Remember me"
-          />
-
-          <Link component={RouterLink} variant="subtitle2" to="#">
-            Forgot password?
-          </Link>
         </Stack>
 
         <LoadingButton
@@ -97,10 +81,37 @@ export default function LoginForm() {
           type="submit"
           variant="contained"
           loading={isSubmitting}
+          sx={{ mt: '3rem' }}
         >
           Login
         </LoadingButton>
-      </Form>
-    </FormikProvider>
+      </form>
+    </Zoom>
   );
-}
+
+  const checkEmailTextElement = (
+    <Box>
+      <Zoom in={checkEmailText}>
+        <Stack spacing={3} display="flex" justifyContent="center" alignItems="center">
+          <Typography variant="h3">Check your Email!</Typography>
+
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            sx={{ mt: '3rem' }}
+            onClick={resetHandler}
+          >
+            Enter details again
+          </LoadingButton>
+        </Stack>
+      </Zoom>
+    </Box>
+  );
+
+  return <>{checkEmailText ? checkEmailTextElement : form}</>;
+};
+
+export default LoginForm;

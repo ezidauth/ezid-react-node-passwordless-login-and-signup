@@ -9,9 +9,9 @@ import { BaseOptionChart } from '../../charts';
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [{ data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380] }];
+const CHART_DATA = [{ data: [146, 65, 59, 47, 42, 27, 18, 3] }];
 
-export default function AppConversionRates() {
+export default function AppPollution() {
   const chartOptions = merge(BaseOptionChart(), {
     tooltip: {
       marker: { show: false },
@@ -27,23 +27,21 @@ export default function AppConversionRates() {
     },
     xaxis: {
       categories: [
-        'Italy',
-        'Japan',
-        'China',
-        'Canada',
-        'France',
-        'Germany',
-        'South Korea',
-        'Netherlands',
-        'United States',
-        'United Kingdom'
+        'Packaging',
+        'Building and Construction',
+        'Textiles',
+        'Other',
+        'Consumer Products',
+        'Transportation',
+        'Electrical/Electronic',
+        'Industrial Machinery'
       ]
     }
   });
 
   return (
     <Card>
-      <CardHeader title="Conversion Rates" subheader="(+43%) than last year" />
+      <CardHeader title="Plastic Pollution by Sector (million tonnes)" />
       <Box sx={{ mx: 3 }} dir="ltr">
         <ReactApexChart type="bar" series={CHART_DATA} options={chartOptions} height={364} />
       </Box>

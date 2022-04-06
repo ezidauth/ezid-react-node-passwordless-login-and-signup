@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import arrowIosForwardFill from '@iconify/icons-eva/arrow-ios-forward-fill';
 import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
 // material
@@ -43,7 +44,6 @@ const ListItemIconStyle = styled(ListItemIcon)({
 });
 
 // ----------------------------------------------------------------------
-
 NavItem.propTypes = {
   item: PropTypes.object,
   active: PropTypes.func
@@ -57,6 +57,9 @@ function NavItem({ item, active }) {
 
   const handleOpen = () => {
     setOpen((prev) => !prev);
+    if (path === '/login') {
+      Cookies.remove('idToken');
+    }
   };
 
   const activeRootStyle = {
@@ -141,6 +144,7 @@ function NavItem({ item, active }) {
       sx={{
         ...(isActiveRoot && activeRootStyle)
       }}
+      // onClick={checkLogout(path)}
     >
       <ListItemIconStyle>{icon && icon}</ListItemIconStyle>
       <ListItemText disableTypography primary={title} />
