@@ -1,40 +1,21 @@
-## Minimal [(Free version)](https://minimal-kit-react.vercel.app/)
+# React + NodeJS Example
 
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
+This is a simple example of an implementation of the /send and /verify API's from EZiD, using React and NodeJS. 
 
-> Free React Admin Dashboard made with Material-UI components and React.
+## Installation
 
-![preview](public/static/preview.png)
+### 1: Clone
+To run this example, first, open a terminal and clone this repository onto your computer. You can do this with ```git clone```. 
 
-| [Minimal Free](https://minimal-kit-react.vercel.app/) | [Minimal](https://material-ui.com/store/items/minimal-dashboard/) |
-| ----------------------------------------------------- | :---------------------------------------------------------------- |
-| **7** Demo pages                                      | **42+** demo pages                                                |
-| -                                                     | ✓ Multi-language                                                  |
-| -                                                     | ✓ Dark/Light Mode 🌓                                              |
-| -                                                     | ✓ [More components](https://minimals.cc/components)               |
-| -                                                     | ✓ TypeScript version                                              |
-| -                                                     | ✓ Design files (Figma & Sketch)                                   |
+### 2: Install the client and server
+Once you have cloned the repository, navigate to the 'client' folder. Then, run ```npm install``` in your terminal.
 
-## Page demo
+Next, navigate to the 'server' folder. Then, run ```npm install``` again. 
 
-- [Dashboard](https://minimal-kit-react.vercel.app/dashboard/app)
-- [Users](https://minimal-kit-react.vercel.app/dashboard/user)
-- [Product](https://minimal-kit-react.vercel.app/dashboard/products)
-- [Blog](https://minimal-kit-react.vercel.app/dashboard/blog)
-- [Login](https://minimal-kit-react.vercel.app/login)
-- [Register](https://minimal-kit-react.vercel.app/register)
-- [Not Found](https://minimal-kit-react.vercel.app/404)
+### 3: Start the server and client
+To start the application, first, navigate to the 'server' folder and run ```npm start```. A message should appear in your terminal indicating that the server is running on a port. Then, navigate to the 'client' folder and run ```npm start```. 
 
-## Getting started
-
-- Recommended `node js 14+` and `npm 6+`
-- Install dependencies: `npm install` or `yarn install`
-- Start the server: `npm run start` or `yarn start`
+That's all! The application should open in a new browser tab.
 
 ## License
-
-Distributed under the MIT License. See [LICENSE](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) for more information.
-
-## Contact us
-
-Email Us: support@minimals.cc
+[MIT](https://choosealicense.com/licenses/mit/)
