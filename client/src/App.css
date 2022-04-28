@@ -1,0 +1,158 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  text-align: center;
+}
+
+.background {
+  background-image: linear-gradient(to right, snow, rgb(217, 231, 255));
+  background-size: cover;
+  display: block;
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  right: 0;
+  z-index: 1;
+}
+
+.background-blur {
+  background-image: linear-gradient(to right, snow, rgb(217, 231, 255));
+  background-size: cover;
+  display: block;
+  filter: blur(7px);
+  -webkit-filter: blur(7px);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  right: 0;
+  z-index: 1;
+}
+
+.logo-container {
+  text-align: center;
+}
+
+.container {
+  box-shadow: 2px 2px 5px grey;
+  margin: 30px auto;
+  border: 2px solid ghostwhite;
+  padding: 30px;
+  border-radius: 10px;
+  min-width: 300px;
+  max-width: 400px;
+  min-height: 100px;
+  text-align: left;
+  overflow: auto;
+  background-color: white;
+  top: 33%;
+  left: 50%;
+  width: 25%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.btn {
+  display: inline-block;
+  background: rgb(80, 77, 249);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: inherit;
+  width: 90%;
+  cursor: pointer;
+}
+
+.btn-ezid {
+  display: inline-block;
+  background: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: inherit;
+  width: 90%;
+  cursor: pointer;
+}
+
+.btn-link {
+  background-color: white;
+  border: 0px solid black;
+  color: black;
+  padding: 5px 10px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 30px;
+  cursor: pointer;
+}
+
+.button-container {
+  text-align: center;
+}
+
+.label-container {
+  text-align: left;
+  margin: 5px;
+  padding: 0px 10px;
+  color: dimgrey;
+}
+
+.label-container-hidden {
+  text-align: left;
+  margin: 5px;
+  padding: 0px 10px;
+  visibility: hidden;
+}
+
+.form-control {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.form-control label {
+  text-align: left;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.form-control input {
+  width: 90%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 18px;
+}
+
+.add-form {
+  margin-bottom: 40px;
+  flex: center;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.statement {
+  font-size: 18px;
+  font-weight: bold;
+}
