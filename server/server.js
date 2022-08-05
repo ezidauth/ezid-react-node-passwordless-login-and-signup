@@ -119,9 +119,7 @@ app.post("/login", (req, res) => {
 //   }
 // });
 
-
 // ----------------- ASYNC AWAIT VERSION -------------------------
-
 
 // Once the user clicks the email link, the /auth page on the front end is loaded. This route is called upon page load
 app.post("/auth", async (req, res) => {
@@ -150,12 +148,15 @@ app.post("/auth", async (req, res) => {
     console.log("Access token is \n \n", typeof access_token, access_token);
     res
       .cookie("access_token", access_token, {
-        secure: false, // this determines whether or not the cookie requires an SSL or HTTPS connection to be retrieved.
-        // For this example, it is set to false as typically localhost does not have a HTTPS connection.
-        // For production applications, this is highly reccomended to be set to true
+        // secure: false, // this determines whether or not the cookie requires an SSL or HTTPS connection to be retrieved.
+        // // For this example, it is set to false as typically localhost does not have a HTTPS connection.
+        // // For production applications, this is highly reccomended to be set to true
+        // httpOnly: true,
+        // // expires: expiryDate, // here you can set your own expiry. For the purposes of this example, it is set to 1 day
+        // sameSite: "none",
+        secure: false,
         httpOnly: true,
-        // expires: expiryDate, // here you can set your own expiry. For the purposes of this example, it is set to 1 day
-        sameSite: "none",
+        sameSite: "lax",
       })
       .sendStatus(200);
   } catch (error) {
