@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Auth = () => {
-  const [loginState, setLoginState] = useState("");
+  const [loginState, setLoginState] = useState(false);
   const [protectedResource, setProtectedResource] = useState("");
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -11,7 +11,7 @@ const Auth = () => {
   //verify authentication
   useEffect(() => {
     axios
-      .post("http://localhost:5001/auth", {
+      .post("/auth", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -21,11 +21,11 @@ const Auth = () => {
       })
       .then((response) => {
         console.log(response);
-        setLoginState("Success");
+        setLoginState(true);
       })
       .catch((error) => {
         console.log(error);
-        setLoginState("Failure");
+        setLoginState(false);
       });
   }, [code]);
 
@@ -33,33 +33,18 @@ const Auth = () => {
     e.preventDefault();
 
     axios
-      .get("http://localhost:5001/getData")
+      .get("/getData") // see server.js for this route. It returns some dummy data
       .then((response) => {
-        console.log(response);
-        setProtectedResource(response);
-        // By returning the id token, here you can set these tokens as cookies or save them to the users file system
+        console.log(response.data);
+        setProtectedResource(response.data);
       })
       .catch((error) => {
-        setProtectedResource("Something went wrong - please try login again");
+        console.log(error);
+        setLoginState(false);
       });
   };
 
-  // const getAPIResource = (e) => {
-  //   e.preventDefault();
-
-  //   axios
-  //     .get("http://localhost:3001/getData")
-  //     .then((response) => {
-  //       console.log(response);
-  //       setProtectedResource(response);
-  //       // By returning the id token, here you can set these tokens as cookies or save them to the users file system
-  //     })
-  //     .catch((error) => {
-  //       setProtectedResource("Something went wrong - please try login again");
-  //     });
-  // };
-
-  if (loginState === "Success") {
+  if (loginState) {
     return (
       <div>
         <div className="background-blur"></div>
@@ -70,11 +55,16 @@ const Auth = () => {
               View My Details
             </button>
           </div>
-          <p className="protected">{protectedResource}</p>
+          {protectedResource.email != null ? (
+            <>
+              <p className="protected">{`Email: ${protectedResource.email}`}</p>
+              <p className="protected">{`Logins: ${protectedResource.logins}`}</p>
+            </>
+          ) : null}
         </div>
       </div>
     );
-  } else if (loginState === "Failure") {
+  } else if (!loginState) {
     return (
       <div>
         <div className="background-blur"></div>
