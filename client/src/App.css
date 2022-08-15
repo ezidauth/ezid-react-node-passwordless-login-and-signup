@@ -10,24 +10,9 @@ p {
 }
 
 .background {
-  background-image: linear-gradient(to right, snow, rgb(217, 231, 255));
   background-size: cover;
+  background-color: white;
   display: block;
-  filter: blur(3px);
-  -webkit-filter: blur(3px);
-  height: 100%;
-  left: 0;
-  position: fixed;
-  right: 0;
-  z-index: 1;
-}
-
-.background-blur {
-  background-image: linear-gradient(to right, snow, rgb(217, 231, 255));
-  background-size: cover;
-  display: block;
-  filter: blur(7px);
-  -webkit-filter: blur(7px);
   height: 100%;
   left: 0;
   position: fixed;

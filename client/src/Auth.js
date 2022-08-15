@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Auth = () => {
-  const [loginState, setLoginState] = useState("");
+  const [loginState, setLoginState] = useState(false);
+  const [protectedResource, setProtectedResource] = useState("");
 
   const urlParams = new URLSearchParams(window.location.search);
   const code = urlParams.get("code"); // This gets the code parameter from the URL
@@ -10,7 +11,7 @@ const Auth = () => {
   //verify authentication
   useEffect(() => {
     axios
-      .post("http://localhost:5001/auth", {
+      .post("/auth", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -19,24 +20,51 @@ const Auth = () => {
         },
       })
       .then((response) => {
-        setLoginState("Success");
-        // By returning the id token, here you can set these tokens as cookies or save them to the users file system
+        console.log(response);
+        setLoginState(true);
       })
       .catch((error) => {
-        setLoginState("Failure");
+        console.log(error);
+        setLoginState(false);
       });
   }, [code]);
 
-  if (loginState === "Success") {
+  const getAPIResource = (e) => {
+    e.preventDefault();
+
+    axios
+      .get("/getData") // see server.js for this route. It returns some dummy data
+      .then((response) => {
+        console.log(response.data);
+        setProtectedResource(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoginState(false);
+      });
+  };
+
+  if (loginState) {
     return (
       <div>
         <div className="background-blur"></div>
         <div className="container">
           <p className="statement">You're logged in!</p>
+          <div className="button-container">
+            <button className="btn" onClick={getAPIResource}>
+              View My Details
+            </button>
+          </div>
+          {protectedResource.email != null ? (
+            <>
+              <p className="protected">{`Email: ${protectedResource.email}`}</p>
+              <p className="protected">{`Logins: ${protectedResource.logins}`}</p>
+            </>
+          ) : null}
         </div>
       </div>
     );
-  } else if (loginState === "Failure") {
+  } else if (!loginState) {
     return (
       <div>
         <div className="background-blur"></div>

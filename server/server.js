@@ -17,7 +17,7 @@ const PUBLIC_KEY = fs.readFileSync("public_key.pem"); // Ensure you have EZiD's 
 
 //Now Calling EZiD API's
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   //first get email from request
   const enteredEmail = req.body.data.email;
   console.log(enteredEmail);
@@ -39,20 +39,26 @@ app.post("/login", (req, res) => {
   };
 
   // post to EZiD /send endpoint
-  axios
-    .post("https://api.ezid.io/email-link/send", data, headers)
-    .then((response) => {
-      console.log(response.data);
-      res.sendStatus(200); // return successful if the result of the API call was successful
-    })
-    .catch((error) => console.log(error)); // display the error if the call is unsuccessful
+  try {
+    const response = await axios.post(
+      "https://api.ezid.io/email-link/send",
+      data,
+      headers
+    );
+    console.log(response.data);
+    res.sendStatus(200); // return successful if the result of the API call was successful
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Once the user clicks the email link, the /auth page on the front end is loaded. This route is called upon page load
-app.post("/auth", (req, res) => {
+app.post("/auth", async (req, res) => {
   // Getting authentication code and email from the request
   authCode = req.body.data.auth_code; //authentication code from url
   const enteredEmail = req.body.data.email; //get entered email
+
+  var access_token, id_token, refresh_token;
 
   //setup request to /verify endpoint
   const data = {
@@ -63,27 +69,89 @@ app.post("/auth", (req, res) => {
   };
 
   // post to EZiD Verify
-
-  axios
-    .post("https://api.ezid.io/email-link/verify", data)
+  try {
+    const response = await axios.post(
+      "https://api.ezid.io/email-link/verify",
+      data
+    );
 
     //get access and id token
-    .then((response) => {
-      // the response will contain an access token, id token and refresh token. You can save these to your user objects
-      // for identification
-      const accessToken = response.data.access_token;
-      const idToken = response.data.id_token;
-      const refreshToken = response.data.refresh_token;
-      // These tokens can be used to authenticate users. Typically, access tokens are stored with the user's credentials
-      // in a secure location. The id token can be sent to the frontend and used in any subsequent calls to verify a user.
-      // Refresh tokens can be used to gain access to another set of id and access tokens.
+    // the response will contain an access token, id token and refresh token. You can save these to your user objects
+    // for identification
+    access_token = response.data.access_token;
+    id_token = response.data.id_token;
+    refresh_token = response.data.refresh_token;
+    console.log(response.data);
+    // These tokens can be used to authenticate users. Typically, access tokens are validated
+    // to provision access to a protected resource. ID Tokens are typically for identifying a user or
+    // displaying their information. Refresh tokens can be used to gain access to another set of id and access tokens.
 
-      console.log(response.data);
+    // This is creating an expiry date for the cookie
+    const currentDate = new Date();
+    const expiryDate = new Date(currentDate.getTime() + 86400000);
 
-      res.sendStatus(200);
-    })
-    .catch((error) => {
-      console.log(error);
-      res.sendStatus(400); // catch and display any errors
-    });
+    res
+      .cookie("access_token", access_token, {
+        secure: false, // this determines whether or not the cookie requires an SSL or HTTPS connection to be retrieved.
+        // For this example, it is set to false as typically localhost does not have a HTTPS connection.
+        // For production applications, this is highly reccomended to be set to true
+        httpOnly: true,
+        expires: expiryDate, // here you can set your own expiry. For the purposes of this example, it is set to 1 day
+        sameSite: "lax",
+      })
+      .sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(401);
+  }
 });
+
+// this is an example of a resource that requires an authenticated user. The authenticateUser function is a middleware that should be present on all protected routes
+app.get("/getData", authenticateUser, (req, res) => {
+  // The decoded access token can now be used to obtain user information (eg. from a database)
+  console.log(req.decoded_token);
+
+  //For the purposes of this demo, we will assume that the token got the following user data
+  res.send({
+    email: "JohnDoe@gmail.com",
+    logins: "12345",
+  });
+});
+
+async function authenticateUser(req, res, next) {
+  //check if access_token cookie is present
+  if (!req.headers.cookie) {
+    console.log("Unauthorised - No access token");
+    res.sendStatus(401); // Throw unauthorised if not found
+  } else {
+    const decodedToken = await verifyJWTToken(
+      req.headers.cookie.split("=")[1],
+      true
+    );
+    req.decoded_token = decodedToken;
+    next();
+  }
+}
+
+// function to verify JWT tokens. For the purpose of this example, we will use this to verify the access_token
+async function verifyJWTToken(token, asymmetricAlg) {
+  var decoded;
+
+  // get key to verify JWT token
+  const key = asymmetricAlg ? PUBLIC_KEY : process.env.TOKEN_SECRET;
+
+  try {
+    decoded = jwt.verify(token, key);
+  } catch (err) {
+    console.log("JWT error " + err);
+    if (err == "TokenExpiredError: jwt expired") {
+      console.log("JWT Expired");
+      decoded = "JWT Expired";
+    } else {
+      decoded = "JWT Verification Failed";
+      console.log("JWT Verification Failed");
+    }
+  }
+
+  return decoded; //return the decoded token
+}
